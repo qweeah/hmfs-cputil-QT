@@ -6,6 +6,10 @@
 #include <QFile>
 #include <QTextStream>
 #include <QStandardItemModel>
+#include <QDir>
+#include <QFileInfo>
+#include <QFileInfoList>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,6 +21,18 @@ MainWindow::MainWindow(QWidget *parent) :
     QStandardItemModel *model = new QStandardItemModel();
     ui->cpTabView->setModel(model);
     ui->cpTabView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    //get all formatted volumes
+    QDir dir("/sys/kernel/debug/hmfs");
+    if (!dir.exists()) {
+        qWarning("Cannot find the example directory");
+        exit(EXIT_FAILURE);
+    }
+    QFileInfoList list = dir.entryInfoList();
+    for (int i = 2; i < list.size(); ++i) { // skip '.' and '..'
+        QFileInfo fileInfo = list.at(i);
+        ui->cboxAddr->addItem(fileInfo.fileName());
+    }
 }
 
 MainWindow::~MainWindow()
@@ -24,10 +40,17 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+/* on_btnShow_clicked
+ *    -- Show all checkpoints from selected volume
+ */
 void MainWindow::on_btnShow_clicked()
 {
-    /* TODO: volume-specific file */
-    QFile cp_file("/sys/kernel/debug/hmfs/2147483648/info");
+    QString path = ui->cboxAddr->currentText();
+    if(path == NULL) {
+        /* TODO: prompt */
+        return;
+    }
+    QFile cp_file("/sys/kernel/debug/hmfs/"+path+"/info");
     if(!cp_file.open(QIODevice::ReadWrite)){
         /* TODO: error prompt */
         return;
@@ -63,15 +86,23 @@ void MainWindow::on_btnShow_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-    Blkdetail_form *cp = new Blkdetail_form();
+    QString path = ui->cboxAddr->currentText();
+    if(path == NULL) {
+        /* TODO: prompt */
+        return;
+    }
+    Blkdetail_form *cp = new Blkdetail_form(0, path);
     cp->show();
 }
 
 void MainWindow::on_cpTabView_doubleClicked(const QModelIndex &index)
 {
-    cpDetail_form *cp = new cpDetail_form(this, index.row());
+    QString path = ui->cboxAddr->currentText();
+    if(path == NULL) {
+        /* TODO: prompt */
+        return;
+    }
+    cpDetail_form *cp = new cpDetail_form(this, index.row(), path);
     cp->show();
     this->hide();
-
-
 }

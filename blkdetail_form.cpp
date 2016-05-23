@@ -6,13 +6,13 @@
 #include <QPainter>
 #include <QPalette>
 
-Blkdetail_form::Blkdetail_form(QWidget *parent) :
-    QDialog(parent),
+Blkdetail_form::Blkdetail_form(QWidget *parent, QString path) :
+//    QDialog(parent),
     ui(new Ui::Blkdetail_form)
 {
     ui->setupUi(this);
     /* 1. setup SpinBox */
-    QFile cp_file("/sys/kernel/debug/hmfs/2147483648/info");
+    QFile cp_file("/sys/kernel/debug/hmfs/"+path+"/info");
     if(!cp_file.open(QIODevice::ReadWrite)){
         /* TODO: error prompt */
         return;

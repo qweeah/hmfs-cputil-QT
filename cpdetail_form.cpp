@@ -12,7 +12,7 @@ cpDetail_form::cpDetail_form(QWidget *parent) :
     ui->setupUi(this);
 }
 
-cpDetail_form::cpDetail_form(QMainWindow *retForm, int cnt):
+cpDetail_form::cpDetail_form(QMainWindow *retForm, int cnt, QString path):
     ui(new Ui::cpDetail_form)
 {
     this->retForm = retForm;
@@ -30,7 +30,7 @@ cpDetail_form::cpDetail_form(QMainWindow *retForm, int cnt):
     hash["valid_node_count"] = ui->validNode_text;
     hash["wall_time"] = ui->wallTime_text;
 
-    QFile cp_file("/sys/kernel/debug/hmfs/2147483648/info");
+    QFile cp_file("/sys/kernel/debug/hmfs/"+path+"/info");
     if(!cp_file.open(QIODevice::ReadWrite)){
         /* TODO: error prompt */
         return;

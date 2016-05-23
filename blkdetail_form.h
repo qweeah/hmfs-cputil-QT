@@ -43,7 +43,7 @@ class Blkdetail_form : public QDialog
 {
     Q_OBJECT
 public:
-    explicit Blkdetail_form(QWidget *parent = 0);
+    explicit Blkdetail_form(QWidget *parent, QString path);
     ~Blkdetail_form();
     RenderArea *renderArea;
 

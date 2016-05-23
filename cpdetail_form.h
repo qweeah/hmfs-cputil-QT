@@ -17,7 +17,7 @@ class cpDetail_form : public QDialog
 
 public:
     explicit cpDetail_form(QWidget *parent);
-    explicit cpDetail_form(QMainWindow *retForm, int cnt);
+    explicit cpDetail_form(QMainWindow *retForm, int cnt, QString path);
     ~cpDetail_form();
 
 private slots:
