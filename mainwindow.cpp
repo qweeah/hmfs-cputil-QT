@@ -39,7 +39,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
 /* on_btnShow_clicked
  *    -- Show all checkpoints from selected volume
  */
@@ -80,7 +79,9 @@ void MainWindow::on_btnShow_clicked()
     model->setHorizontalHeaderItem(0, new QStandardItem(QObject::tr("Version Number")));
     ui->cpTabView->setColumnWidth(0,140);
     model->setHorizontalHeaderItem(1, new QStandardItem(QObject::tr("Time")));
-    ui->cpTabView->horizontalHeader()->setStretchLastSection(true);
+    //FIXME:repeated strectch cause unwanted expansion
+    //QHeaderView *hv = ui->cpTabView->horizontalHeader();
+    //hv->setStretchLastSection(true);
 
 }
 
@@ -105,4 +106,35 @@ void MainWindow::on_cpTabView_doubleClicked(const QModelIndex &index)
     cpDetail_form *cp = new cpDetail_form(this, index.row(), path);
     cp->show();
     this->hide();
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    QString path = ui->cboxAddr->currentText();
+    if(path == NULL) {
+        /* TODO: prompt */
+        return;
+    }
+    QFile cp_file("/sys/kernel/debug/hmfs/"+path+"/info");
+    if(!cp_file.open(QIODevice::ReadWrite)){
+        /* TODO: error prompt */
+        return;
+    }
+
+    QTextStream out(&cp_file);
+    out << "cp t" << endl;
+    QTextStream in(&cp_file);
+    bool done = false;
+    QStandardItemModel *model = (QStandardItemModel*)ui->cpTabView->model();
+    model->clear();
+    QString line = in.readLine();
+    if(line.contains("added")){
+        done = true;
+    }
+    line = in.readLine();
+
+    cp_file.close();
+    if(done) {
+        on_btnShow_clicked();
+    } //TODO else prompt
 }

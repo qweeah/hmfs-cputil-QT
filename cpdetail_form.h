@@ -23,6 +23,8 @@ public:
 private slots:
     void on_cpDetail_form_finished(int result);
 
+    void on_btnMount_clicked();
+
 private:
     Ui::cpDetail_form *ui;
     QHash<QString, QLineEdit*> hash;

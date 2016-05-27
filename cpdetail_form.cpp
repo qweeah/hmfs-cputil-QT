@@ -62,3 +62,8 @@ void cpDetail_form::on_cpDetail_form_finished(int result)
     this->retForm->show();
     this->hash.clear();
 }
+
+void cpDetail_form::on_btnMount_clicked()
+{
+
+}
