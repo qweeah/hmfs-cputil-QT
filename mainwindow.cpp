@@ -10,7 +10,6 @@
 #include <QFileInfo>
 #include <QFileInfoList>
 
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -33,11 +32,13 @@ MainWindow::MainWindow(QWidget *parent) :
         QFileInfo fileInfo = list.at(i);
         ui->cboxAddr->addItem(fileInfo.fileName());
     }
+    this->errMsg = new QErrorMessage();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    free(errMsg);
 }
 /* on_btnShow_clicked
  *    -- Show all checkpoints from selected volume
@@ -46,12 +47,12 @@ void MainWindow::on_btnShow_clicked()
 {
     QString path = ui->cboxAddr->currentText();
     if(path == NULL) {
-        /* TODO: prompt */
+        errMsg->showMessage("Please choose a volume!");
         return;
     }
     QFile cp_file("/sys/kernel/debug/hmfs/"+path+"/info");
     if(!cp_file.open(QIODevice::ReadWrite)){
-        /* TODO: error prompt */
+        errMsg->showMessage("Cannot open info file in debugfs!");
         return;
     }
 
@@ -67,11 +68,11 @@ void MainWindow::on_btnShow_clicked()
         if(line.contains("checkpoint_ver")){
             QStringList list = line.split(": ");
             model->setItem(cnt,0,new QStandardItem(list[1]));//XXX
+            cnt++;
         }
         else if(line.contains("wall_time")){
             QStringList list = line.split(": ");
             model->setItem(cnt,1,new QStandardItem(list[1]));//XXX
-            cnt++;
         }
         line = in.readLine();
     }
@@ -79,7 +80,7 @@ void MainWindow::on_btnShow_clicked()
     model->setHorizontalHeaderItem(0, new QStandardItem(QObject::tr("Version Number")));
     ui->cpTabView->setColumnWidth(0,140);
     model->setHorizontalHeaderItem(1, new QStandardItem(QObject::tr("Time")));
-    //FIXME:repeated strectch cause unwanted expansion
+    //FIXME: repeated strectch cause expansion in first column
     //QHeaderView *hv = ui->cpTabView->horizontalHeader();
     //hv->setStretchLastSection(true);
 
@@ -89,7 +90,7 @@ void MainWindow::on_pushButton_clicked()
 {
     QString path = ui->cboxAddr->currentText();
     if(path == NULL) {
-        /* TODO: prompt */
+        errMsg->showMessage("Please choose a volume!");
         return;
     }
     Blkdetail_form *cp = new Blkdetail_form(0, path);
@@ -100,7 +101,7 @@ void MainWindow::on_cpTabView_doubleClicked(const QModelIndex &index)
 {
     QString path = ui->cboxAddr->currentText();
     if(path == NULL) {
-        /* TODO: prompt */
+        errMsg->showMessage("Please choose a volume!");
         return;
     }
     cpDetail_form *cp = new cpDetail_form(this, index.row(), path);
@@ -112,12 +113,12 @@ void MainWindow::on_pushButton_2_clicked()
 {
     QString path = ui->cboxAddr->currentText();
     if(path == NULL) {
-        /* TODO: prompt */
+        errMsg->showMessage("Please choose a volume!");
         return;
     }
     QFile cp_file("/sys/kernel/debug/hmfs/"+path+"/info");
     if(!cp_file.open(QIODevice::ReadWrite)){
-        /* TODO: error prompt */
+        errMsg->showMessage("Cannot open info file in debugfs!");
         return;
     }
 
@@ -131,10 +132,10 @@ void MainWindow::on_pushButton_2_clicked()
     if(line.contains("added")){
         done = true;
     }
-    line = in.readLine();
-
     cp_file.close();
     if(done) {
         on_btnShow_clicked();
-    } //TODO else prompt
+    } else {
+        errMsg->showMessage("Failed to add a new checkpoint");
+    }//TODO else prompt
 }
