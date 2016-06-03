@@ -25,11 +25,21 @@ cpDetail_form::cpDetail_form(QMainWindow *retForm, int cnt, QString path):
     hash["checkpoint_ver"] = ui->verNum_text;
     hash["alloc_block_count"] = ui->allocBlk_text;
     hash["valid_block_count"] = ui->validBlk_text;
+//Version 1
+/*
     hash["free_segment_count"] = ui->freeSeg_text;
     hash["cur_node_segno"] = ui->nodeSegNo_text;
     hash["cur_node_blkoff"] = ui->nodeSegOfs_text;
     hash["cur_data_segno"] = ui->dataSegNo_text;
     hash["cur_data_blkoff"] = ui->dataSegOfs_text;
+*/
+//Version 2
+    hash["current segment (0)"] = ui->freeSeg_text;
+    hash["current segment (1)"] = ui->nodeSegNo_text;
+    hash["current segment (2)"] = ui->nodeSegOfs_text;
+    hash["current segment (3)"] = ui->dataSegNo_text;
+    hash["current segment (4)"] = ui->dataSegOfs_text;
+
     hash["valid_inode_count"] = ui->validInode_text;
     hash["valid_node_count"] = ui->validNode_text;
     hash["wall_time"] = ui->wallTime_text;

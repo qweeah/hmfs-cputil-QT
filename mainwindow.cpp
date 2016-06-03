@@ -68,11 +68,11 @@ void MainWindow::on_btnShow_clicked()
         if(line.contains("checkpoint_ver")){
             QStringList list = line.split(": ");
             model->setItem(cnt,0,new QStandardItem(list[1]));//XXX
-            cnt++;
         }
         else if(line.contains("wall_time")){
             QStringList list = line.split(": ");
             model->setItem(cnt,1,new QStandardItem(list[1]));//XXX
+            cnt++;
         }
         line = in.readLine();
     }
