@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QErrorMessage>
+#include <QMessageBox>
 
 
 cpDetail_form::cpDetail_form(QWidget *parent) :
@@ -44,6 +45,7 @@ cpDetail_form::cpDetail_form(QMainWindow *retForm, int cnt, QString path):
     hash["valid_node_count"] = ui->validNode_text;
     hash["wall_time"] = ui->wallTime_text;
     verNum=cnt;
+    dbgPath = "/sys/kernel/debug/hmfs/" + path;
     errMsg = new QErrorMessage(this);
 
     QFile cp_file("/sys/kernel/debug/hmfs/"+path+"/info");
@@ -115,5 +117,32 @@ void cpDetail_form::on_btnMount_clicked()
     if(output!=""){
         errMsg->showMessage("Remount failed!\n\n "+output);
         return;
+    }
+}
+
+void cpDetail_form::on_btnDelete_clicked()
+{
+    int r = QMessageBox::question(this,"Warning",
+                                  "Do you want to delete checkpoint"+QString::number(verNum),
+                                  QMessageBox::Yes|QMessageBox::Default,
+                                  QMessageBox::No|QMessageBox::Escape);
+    if(r == QMessageBox::Yes){
+        QFile cp_file(dbgPath +"/info");
+        if(!cp_file.open(QIODevice::ReadWrite)){
+             errMsg->showMessage("Cannot open file\n");
+            return;
+        }
+
+        QTextStream out(&cp_file);
+        out << "cp d"<< verNum <<endl;
+        QTextStream in(&cp_file);
+
+        QString line = in.readLine();
+        if(line.contains("deleted")) {
+            this->close();
+        } else {
+            errMsg->showMessage("Error occurs during deleting checkpoint "
+                                + QString::number(verNum));
+        }
     }
 }

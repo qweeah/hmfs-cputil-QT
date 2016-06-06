@@ -26,12 +26,15 @@ private slots:
 
     void on_btnMount_clicked();
 
+    void on_btnDelete_clicked();
+
 private:
     Ui::cpDetail_form *ui;
     QHash<QString, QLineEdit*> hash;
     QMainWindow *retForm;
-    int verNum;
+    int verNum;                 //checkpoint number of currently displaying cp
     QErrorMessage *errMsg;
+    QString dbgPath;            //path to debugfs
 };
 
 #endif // CPDETAIL_FORM_H
