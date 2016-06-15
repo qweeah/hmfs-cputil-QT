@@ -23,7 +23,7 @@ Blkdetail_form::Blkdetail_form(QWidget *parent, QString path) :
 
     QString line = in.readLine();
     QStringList list = line.split(": ");
-    ui->segno_spin->setMinimum(0);
+    ui->segno_spin->setMinimum(1);
     ui->segno_spin->setMaximum(list[1].toInt());
     cp_file.close();
     /* 2. setup RenderArea*/
@@ -103,13 +103,16 @@ void Blkdetail_form::on_blkDetail_btn_clicked()
         }
         if(line.contains("--")) {
             list = line.split(": "); //FORMAT: `-- [<segno>: <blkofs>] --`
+            if(list.count()<1) continue; //TODO error
             list = list[1].split("]");
             curOfs = list[0].toInt();
         } else if(line.contains("type")) {
             list = line.split(": ");
+            if(list.count()<1) continue; //TODO error
             renderArea->blkType[curOfs] = list[1].toInt();
         } else if(line.contains("v bit")) {
             list = line.split(": ");
+            if(list.count()<1) continue; //TODO error
             if( 0 == list[1].toInt()) {
                 renderArea->blkType[curOfs] = TYPE_INVALID;
             }

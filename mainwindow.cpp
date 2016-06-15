@@ -86,6 +86,11 @@ void MainWindow::on_btnShow_clicked()
 
 }
 
+void MainWindow::refresh()
+{
+    on_btnShow_clicked();
+}
+
 void MainWindow::on_pushButton_clicked()
 {
     QString path = ui->cboxAddr->currentText();
@@ -104,7 +109,8 @@ void MainWindow::on_cpTabView_doubleClicked(const QModelIndex &index)
         errMsg->showMessage("Please choose a volume!");
         return;
     }
-    cpDetail_form *cp = new cpDetail_form(this, index.row(), path);
+    int verNum = index.sibling(index.row(), 0).data().toInt();
+    cpDetail_form *cp = new cpDetail_form(this, verNum, path);
     cp->show();
     this->hide();
 }

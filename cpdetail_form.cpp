@@ -17,7 +17,7 @@ cpDetail_form::cpDetail_form(QWidget *parent) :
     ui->setupUi(this);
 }
 
-cpDetail_form::cpDetail_form(QMainWindow *retForm, int cnt, QString path):
+cpDetail_form::cpDetail_form(MainWindow *retForm, int cnt, QString path):
     ui(new Ui::cpDetail_form)
 {
     this->retForm = retForm;
@@ -64,10 +64,10 @@ cpDetail_form::cpDetail_form(QMainWindow *retForm, int cnt, QString path):
             line = in.readLine();
             continue;
         }
-        QStringList list = line.split(": ");
+        QStringList list = line.split(":");
         QLineEdit *t=hash.value(list[0]);
         if(t != NULL){
-            t->setText(list[1]);
+            t->setText(list[1].trimmed());
         }
         line = in.readLine();
     }
@@ -82,6 +82,7 @@ cpDetail_form::~cpDetail_form()
 void cpDetail_form::on_cpDetail_form_finished(int result)
 {
     this->retForm->show();
+    this->retForm->refresh();
     this->hash.clear();
 }
 
@@ -134,7 +135,7 @@ void cpDetail_form::on_btnDelete_clicked()
         }
 
         QTextStream out(&cp_file);
-        out << "cp d"<< verNum <<endl;
+        out << "cp d "<< verNum <<endl;
         QTextStream in(&cp_file);
 
         QString line = in.readLine();

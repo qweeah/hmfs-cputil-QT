@@ -8,6 +8,8 @@
 #include <QMainWindow>
 #include <QErrorMessage>
 
+#include "mainwindow.h"
+
 namespace Ui {
 class cpDetail_form;
 }
@@ -18,7 +20,7 @@ class cpDetail_form : public QDialog
 
 public:
     explicit cpDetail_form(QWidget *parent);
-    explicit cpDetail_form(QMainWindow *retForm, int cnt, QString path);
+    explicit cpDetail_form(MainWindow *retForm, int cnt, QString path);
     ~cpDetail_form();
 
 private slots:
@@ -31,7 +33,7 @@ private slots:
 private:
     Ui::cpDetail_form *ui;
     QHash<QString, QLineEdit*> hash;
-    QMainWindow *retForm;
+    MainWindow *retForm;
     int verNum;                 //checkpoint number of currently displaying cp
     QErrorMessage *errMsg;
     QString dbgPath;            //path to debugfs
