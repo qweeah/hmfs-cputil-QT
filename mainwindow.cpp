@@ -9,6 +9,8 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QFileInfoList>
+#include <QFileDialog>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -144,4 +146,43 @@ void MainWindow::on_pushButton_2_clicked()
     } else {
         errMsg->showMessage("Failed to add a new checkpoint");
     }//TODO else prompt
+}
+
+void MainWindow::on_btnRemount_clicked()
+{
+    QString mountPath = QFileDialog::getExistingDirectory(this,"Choose the mounting point",
+                                                          "/home",
+                                                          QFileDialog::ShowDirsOnly
+                                                          | QFileDialog::DontResolveSymlinks);
+    QProcess umount;
+    umount.start("umount", QStringList() << mountPath);
+    if(!umount.waitForStarted()){
+        errMsg->showMessage("Start umount failed");
+        return;
+    }
+    umount.waitForFinished();
+    QString output = QString(umount.readAllStandardError());
+
+    if(output != "") {
+        errMsg->showMessage("Unmount failed!\n\n"+output);
+        return;
+    }
+
+    QProcess remount;
+    QString i = ui->cboxAddr->currentText();
+    bool convertOK;
+    long long intNum = i.toLongLong(&convertOK, 10);
+    QString hexStr = QString::number(intNum, 16).prepend("0x");
+    QString mntCMD="mount -t hmfs -o physaddr=" + hexStr + ",uid=1000,gid=1000 none " + mountPath;
+    remount.start("sh", QStringList() << "-c" << mntCMD);
+    if(!remount.waitForStarted()){
+        errMsg->showMessage("Start remount failed");
+        return;
+    }
+    output = QString(remount.readAllStandardError());
+    remount.waitForFinished();
+    if(output!=""){
+        errMsg->showMessage("Remount failed!\n\n "+output);
+        return;
+    }
 }

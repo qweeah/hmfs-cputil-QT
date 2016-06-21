@@ -36,7 +36,7 @@ private:
     MainWindow *retForm;
     int verNum;                 //checkpoint number of currently displaying cp
     QErrorMessage *errMsg;
-    QString dbgPath;            //path to debugfs
+    QString dirName;            //name of debugfs directory
 };
 
 #endif // CPDETAIL_FORM_H

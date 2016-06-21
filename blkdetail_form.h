@@ -54,6 +54,7 @@ private slots:
 
 private:
     Ui::Blkdetail_form *ui;
+    QString dirName;
 };
 
 #endif // BLKDETAIL_FORM_H

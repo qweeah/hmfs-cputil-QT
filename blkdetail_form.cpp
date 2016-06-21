@@ -13,6 +13,7 @@ Blkdetail_form::Blkdetail_form(QWidget *parent, QString path) :
     ui->setupUi(this);
     /* 1. setup SpinBox */
     QFile cp_file("/sys/kernel/debug/hmfs/"+path+"/info");
+    this->dirName = path;
     if(!cp_file.open(QIODevice::ReadWrite)){
         /* TODO: error prompt */
         return;
@@ -26,6 +27,7 @@ Blkdetail_form::Blkdetail_form(QWidget *parent, QString path) :
     ui->segno_spin->setMinimum(1);
     ui->segno_spin->setMaximum(list[1].toInt());
     cp_file.close();
+
     /* 2. setup RenderArea*/
     renderArea =  new RenderArea;
     renderArea->setFixedSize(100,100);
@@ -84,7 +86,7 @@ RenderArea::~RenderArea() {
 void Blkdetail_form::on_blkDetail_btn_clicked()
 {
     /* 1. get blk info */
-    QFile cp_file("/sys/kernel/debug/hmfs/2147483648/info");
+    QFile cp_file("/sys/kernel/debug/hmfs/" + dirName + "/info");
     if(!cp_file.open(QIODevice::ReadWrite)){
         /* TODO: error prompt */
         return;

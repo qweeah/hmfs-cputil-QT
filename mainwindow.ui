@@ -46,14 +46,14 @@
         <item>
          <widget class="QPushButton" name="pushButton_2">
           <property name="text">
-           <string>add checkpoint</string>
+           <string>Add Checkpoint</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="btnDelete">
+         <widget class="QPushButton" name="btnRemount">
           <property name="text">
-           <string>delete checkpoint</string>
+           <string>Writable Remount</string>
           </property>
          </widget>
         </item>
@@ -77,14 +77,14 @@
         <item>
          <widget class="QPushButton" name="btnShow">
           <property name="text">
-           <string>show checkpoints</string>
+           <string>All Checkpoints</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="pushButton">
           <property name="text">
-           <string>show block info</string>
+           <string>Space Usage</string>
           </property>
          </widget>
         </item>

@@ -45,7 +45,7 @@ cpDetail_form::cpDetail_form(MainWindow *retForm, int cnt, QString path):
     hash["valid_node_count"] = ui->validNode_text;
     hash["wall_time"] = ui->wallTime_text;
     verNum=cnt;
-    dbgPath = "/sys/kernel/debug/hmfs/" + path;
+    dirName = "/sys/kernel/debug/hmfs/" + path;
     errMsg = new QErrorMessage(this);
 
     QFile cp_file("/sys/kernel/debug/hmfs/"+path+"/info");
@@ -107,7 +107,8 @@ void cpDetail_form::on_btnMount_clicked()
     }
 
     QProcess remount;
-    QString mntCMD="mount -t hmfs -o physaddr=0x80000000,uid=1000,gid=1000,ro,mnt_cp=" +QString::number(verNum)+" none " + mountPath;
+    QString hexAddr = QString::number(dirName.toLongLong(), 16).prepend("0x");
+    QString mntCMD="mount -t hmfs -o physaddr="+ hexAddr +",uid=1000,gid=1000,ro,mnt_cp=" +QString::number(verNum)+" none " + mountPath;
     remount.start("sh", QStringList() << "-c" << mntCMD);
     if(!remount.waitForStarted()){
         errMsg->showMessage("Start remount failed");
@@ -128,7 +129,7 @@ void cpDetail_form::on_btnDelete_clicked()
                                   QMessageBox::Yes|QMessageBox::Default,
                                   QMessageBox::No|QMessageBox::Escape);
     if(r == QMessageBox::Yes){
-        QFile cp_file(dbgPath +"/info");
+        QFile cp_file(dirName +"/info");
         if(!cp_file.open(QIODevice::ReadWrite)){
              errMsg->showMessage("Cannot open file\n");
             return;
