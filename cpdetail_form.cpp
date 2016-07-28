@@ -141,7 +141,10 @@ void cpDetail_form::on_btnDelete_clicked()
 
         QString line = in.readLine();
         if(line.contains("deleted")) {
-            this->close();
+            errMsg->showMessage("Checkpoint deleted!"
+                                + QString::number(verNum));
+            ui->btnDelete->setEnabled(false);
+
         } else {
             errMsg->showMessage("Error occurs during deleting checkpoint "
                                 + QString::number(verNum));
