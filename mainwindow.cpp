@@ -82,6 +82,7 @@ void MainWindow::on_btnShow_clicked()
     model->setHorizontalHeaderItem(0, new QStandardItem(QObject::tr("Version Number")));
     ui->cpTabView->setColumnWidth(0,140);
     model->setHorizontalHeaderItem(1, new QStandardItem(QObject::tr("Time")));
+    ui->cpTabView->setColumnWidth(1,300);
     //FIXME: repeated strectch cause expansion in first column
     //QHeaderView *hv = ui->cpTabView->horizontalHeader();
     //hv->setStretchLastSection(true);
@@ -119,6 +120,10 @@ void MainWindow::on_cpTabView_doubleClicked(const QModelIndex &index)
 
 void MainWindow::on_pushButton_2_clicked()
 {
+    int cpCnt = ui->cpTabView->model()->rowCount();
+    if(cpCnt == 0) {
+        return;
+    }
     QString path = ui->cboxAddr->currentText();
     if(path == NULL) {
         errMsg->showMessage("Please choose a volume!");
@@ -146,6 +151,10 @@ void MainWindow::on_pushButton_2_clicked()
     } else {
         errMsg->showMessage("Failed to add a new checkpoint");
     }//TODO else prompt
+
+    if(cpCnt == ui->cpTabView->model()->rowCount()) {
+        errMsg->showMessage("No file change yet!");
+    }
 }
 
 void MainWindow::on_btnRemount_clicked()

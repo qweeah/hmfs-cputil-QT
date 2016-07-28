@@ -45,7 +45,7 @@ cpDetail_form::cpDetail_form(MainWindow *retForm, int cnt, QString path):
     hash["valid_node_count"] = ui->validNode_text;
     hash["wall_time"] = ui->wallTime_text;
     verNum=cnt;
-    dirName = "/sys/kernel/debug/hmfs/" + path;
+    dirName =  path;
     errMsg = new QErrorMessage(this);
 
     QFile cp_file("/sys/kernel/debug/hmfs/"+path+"/info");
@@ -129,7 +129,7 @@ void cpDetail_form::on_btnDelete_clicked()
                                   QMessageBox::Yes|QMessageBox::Default,
                                   QMessageBox::No|QMessageBox::Escape);
     if(r == QMessageBox::Yes){
-        QFile cp_file(dirName +"/info");
+        QFile cp_file("/sys/kernel/debug/hmfs/" + dirName +"/info");
         if(!cp_file.open(QIODevice::ReadWrite)){
              errMsg->showMessage("Cannot open file\n");
             return;

@@ -24,7 +24,7 @@ Blkdetail_form::Blkdetail_form(QWidget *parent, QString path) :
 
     QString line = in.readLine();
     QStringList list = line.split(": ");
-    ui->segno_spin->setMinimum(1);
+    ui->segno_spin->setMinimum(0);
     ui->segno_spin->setMaximum(list[1].toInt());
     cp_file.close();
 
